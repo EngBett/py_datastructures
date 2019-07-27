@@ -52,6 +52,7 @@ class LinkedList:
                     last_node = last_node.next
                 new_node.next = last_node.next
                 last_node.next = new_node
+                self.size += 1
         else:
             print("index not found")
 
@@ -66,15 +67,63 @@ class LinkedList:
         else:
             return None
 
-    def pop(self):
-        if not self.empty():
-            while self.head.next is not None:
-                self.head = self.head.next
-            current = self.head
-            self.head = None
-            return current.data
+    def delete_node(self, data):
+        curr_node = self.head
+        if curr_node and curr_node.data == data:
+            self.head = curr_node.next
+            curr_node = None
+            self.size -= 1
+            return
+
+        prev = None
+        while curr_node and curr_node.data != data:
+            prev = curr_node
+            curr_node = curr_node.next
+
+        if curr_node is None:
+            return
         else:
-            return None
+            prev.next = curr_node.next
+            curr_node = None
+            self.size -= 1
+            return
+
+    def pop(self):
+        curr_node = self.head
+        prev = None
+        while curr_node.next is not None:
+            prev = curr_node
+            curr_node = curr_node.next
+
+        prev.next = None
+        data = curr_node.data
+        curr_node = None
+        self.size -= 1
+
+        return data
+
+    def delete_at_index(self, index):
+        if self.len() >= index + 1:
+            if index == self.len() - 1:
+                self.pop()
+            elif index == 0:
+                curr = self.head
+                self.head = curr.next
+                curr = None
+                self.size -= 1
+            else:
+                curr = self.head
+                prev = None
+                for i in range(index+1):
+                    if i != 0:
+                        prev = curr
+                        curr = curr.next
+                prev.next = curr.next
+                curr = None
+                self.size -= 1
+
+        else:
+            return
 
     def len(self):
         return self.size
@@ -86,7 +135,6 @@ llist.append(3)
 llist.append(2)
 llist.prepend(7)
 
-print(llist.push_to_index(6, 1))
-llist.pop()
+llist.push_to_index(6, 1)
+llist.delete_at_index(3)
 llist.print()
-
